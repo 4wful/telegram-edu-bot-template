@@ -118,6 +118,7 @@ telegram-edu-bot-template/
    TELEGRAM_BOT_TOKEN=tu_token_aqui
    AUTHORIZED_CHAT_ID=123456789
    EXCEL_URL=https://link-al-archivo.xlsx
+   RENDER_URL=https://link-al-servicio-render
    ```
 
 5. Ejecuta el bot:
