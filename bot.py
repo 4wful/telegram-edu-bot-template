@@ -1,45 +1,35 @@
 import os
-import time
 import requests
+from flask import Flask, request
 from dotenv import load_dotenv
 
-#Importar Modulos y sus funciones
+# Importar módulos
 from modules.welcome import get_welcome_message
 from modules.status import get_all_student_status, get_student_status
 from modules.payments import (
-    get_all_payments,
-    get_student_payment,
-    get_pending_payments,
-    get_total_payment,
+    get_all_payments, get_student_payment, get_pending_payments, get_total_payment,
 )
 from modules.categories import (
-    get_all_categories,
-    get_category_by_name,
-    get_by_category,
+    get_all_categories, get_category_by_name, get_by_category,
 )
 from modules.info import (
-    get_full_info,
-    get_apoderado,
-    get_student_months,
+    get_full_info, get_apoderado, get_student_months,
 )
 from modules.resumen import get_resumen_general
 
 load_dotenv()
+app = Flask(__name__)
+
 TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 BOT_URL = f"https://api.telegram.org/bot{TOKEN}"
+RENDER_URL = os.getenv("RENDER_EXTERNAL_URL")  # esta variable la definirás en Render
+
 AUTHORIZED_CHAT_IDS = os.getenv("AUTHORIZED_CHAT_ID", "")
 AUTHORIZED_CHAT_IDS = [x.strip() for x in AUTHORIZED_CHAT_IDS.split(",") if x.strip()]
 
-last_update_id = None
-
 def send_message(text, chat_id):
-    try:
-        payload = {"chat_id": chat_id, "text": text, "parse_mode": "Markdown"}
-        r = requests.post(f"{BOT_URL}/sendMessage", data=payload)
-        if r.status_code != 200:
-            print("❌ Error al enviar:", r.text)
-    except Exception as e:
-        print(f"❌ Excepción al enviar mensaje: {e}")
+    payload = {"chat_id": chat_id, "text": text, "parse_mode": "Markdown"}
+    requests.post(f"{BOT_URL}/sendMessage", data=payload)
 
 def handle_command(text, chat_id, user_name):
     cmd = text.lower().strip()
@@ -129,10 +119,7 @@ def handle_command(text, chat_id, user_name):
             )
         else:
             ap_info = get_apoderado(nombre)
-            msg = (
-                ap_info
-                if ap_info else f"⚠️ No se encontró al alumno: {nombre}."
-            )
+            msg = ap_info if ap_info else f"⚠️ No se encontró al alumno: {nombre}."
             send_message(msg, chat_id)
 
     elif cmd.startswith("/resumen"):
@@ -159,41 +146,34 @@ def handle_command(text, chat_id, user_name):
             chat_id,
         )
 
-print("🤖 Bot de academia activo...")
+@app.route("/", methods=["GET"])
+def index():
+    return "🤖 Bot AYUX activo vía webhook"
 
-while True:
-    try:
-        url = f"{BOT_URL}/getUpdates"
-        if last_update_id:
-            url += f"?offset={last_update_id + 1}"
+@app.route("/", methods=["POST"])
+def webhook():
+    data = request.get_json()
+    if "message" in data:
+        chat_id = str(data["message"]["chat"]["id"])
+        text = data["message"].get("text", "")
+        user_name = data["message"]["from"].get("first_name", "Usuario")
 
-        r = requests.get(url)
-        data = r.json()
+        if chat_id in AUTHORIZED_CHAT_IDS:
+            handle_command(text, chat_id, user_name)
+        else:
+            send_message("⛔ No tienes permiso para usar este bot.", chat_id)
+    return "OK"
 
-        updates = data.get("result", [])
-        for update in updates:
-            update_id = update["update_id"]
-            message = update.get("message", {})
-            text = message.get("text", "")
-            chat_id = str(message.get("chat", {}).get("id", ""))
-            user_name = message.get("from", {}).get("first_name", "Usuario")
+def set_webhook():
+    url = f"{BOT_URL}/setWebhook"
+    webhook_url = f"{RENDER_URL}/"
+    response = requests.post(url, data={"url": webhook_url})
+    print("📡 Webhook registrado:", response.text)
 
-            print(f"Recibido update_id={update_id} chat_id={chat_id} user={user_name} texto={text}")
+if __name__ == "__main__":
+    set_webhook()
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 10000)))
 
-            if chat_id not in AUTHORIZED_CHAT_IDS:
-                send_message("⛔ No tienes permiso para usar este bot.", chat_id)
-                last_update_id = update_id
-                continue
-
-            if text:
-                handle_command(text, chat_id, user_name)
-
-            last_update_id = update_id
-
-    except Exception as e:
-        print(f"[ERROR LOOP] {e}")
-
-    time.sleep(3)
 
 
 
