@@ -148,12 +148,11 @@ telegram-edu-bot-template/
 
 ---
 
+
 ## 🖼️ Vista Preliminar
+Aquí puedes ver una captura del bot en funcionamiento dentro de Telegram:
 
-A continuación, una vista del bot funcionando en Telegram:
-
-![vista preliminar del bot]![image](https://github.com/user-attachments/assets/eae6cb34-bb93-41b7-beb7-5da134ee251c)
-)
+![image](https://github.com/user-attachments/assets/eae6cb34-bb93-41b7-beb7-5da134ee251c)
 
 ---
 
