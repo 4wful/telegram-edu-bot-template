@@ -60,26 +60,25 @@ Puedes utilizar este repositorio como base para tu propio bot académico. Person
 
 ```
 telegram-edu-bot-template/
+├── bot.py                 # Archivo principal que gestiona el bot de Telegram
+├── data/                 # Funciones generales y carga de datos desde Excel
+│   ├── config.py         # Configuración general del proyecto
+│   ├── excel_loader.py   # Carga y lectura de datos desde archivos Excel
+│   └── utils.py          # Funciones utilitarias comunes (ej. limpieza, búsqueda)
 │
-├── bot.py                 # Archivo principal que gestiona el bot
-├── data/
-│   └── sheet_utils.py     # Funciones generales para manejo de Excel
+├── modules/              # Módulos separados por funcionalidad del bot
+│   ├── categories.py     # Funciones por categoría de alumnos
+│   ├── info.py           # Información detallada del alumno y apoderado
+│   ├── payments.py       # Funciones relacionadas a pagos
+│   ├── resumen.py        # Función para generar resumen general
+│   ├── status.py         # Estado del alumno (activo, retirado, deuda, etc.)
+│   └── welcome.py        # Mensaje de bienvenida al iniciar el bot
 │
-├── modules/
-│   ├── bienvenida.py      # Mensaje de bienvenida
-│   ├── estado.py          # Funciones relacionadas al estado de alumnos
-│   ├── pagos.py           # Funciones de pagos
-│   ├── categorias.py      # Funciones por categoría
-│   ├── resumen.py         # Función resumen general
-│   ├── info.py            # Información detallada y apoderado
-│   └── meses.py           # Meses en AYUX, pagados, pendientes
-│
-├── .env                   # Variables sensibles (NO se sube al repo)
-├── .gitignore             # Ignora venv, .env, __pycache__, etc.
-├── requirements.txt       # Librerías requeridas
-└── README.md              # Este archivo
+├── .env                  # Variables sensibles (token del bot, rutas, etc.)
+├── .gitignore            # Archivos/carpetas ignoradas por git (venv, .env, __pycache__)
+├── requirements.txt      # Librerías requeridas para el proyecto
+└── Readme.markdown       # Documentación del proyecto
 ```
-
 ---
 
 ## 🛠️ Instalación
@@ -152,7 +151,7 @@ telegram-edu-bot-template/
 ## 🖼️ Vista Preliminar
 Aquí puedes ver una captura del bot en funcionamiento dentro de Telegram:
 
-![image](https://github.com/user-attachments/assets/eae6cb34-bb93-41b7-beb7-5da134ee251c)
+![image](https://github.com/user-attachments/assets/8463903c-838b-4e24-9855-c2b4d3105d60)
 
 ---
 
