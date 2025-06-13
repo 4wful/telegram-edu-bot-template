@@ -87,7 +87,7 @@ telegram-edu-bot-template/
 1. Clona el repositorio:
 
    ```bash
-   git clone https://github.com/tu-usuario/telegram-edu-bot-template.git
+   git clone https://github.com/4wful/telegram-edu-bot-template.git
    cd telegram-edu-bot-template
    ```
 
