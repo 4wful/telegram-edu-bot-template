@@ -152,7 +152,8 @@ telegram-edu-bot-template/
 
 A continuación, una vista del bot funcionando en Telegram:
 
-![vista preliminar del bot](https://via.placeholder.com/700x400.png?text=Ejemplo+de+uso+del+Bot+AYUX)
+![vista preliminar del bot]![image](https://github.com/user-attachments/assets/eae6cb34-bb93-41b7-beb7-5da134ee251c)
+)
 
 ---
 
